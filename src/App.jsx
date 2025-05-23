@@ -1,18 +1,26 @@
 import "./styles/theme.css";
 import "./styles/global.css";
+import { MyText } from "./components/MyText";
 
 export default function App() {
+  const texts = [
+    { title: "Meu título", text: "Meu texto" },
+    { title: "Meu título", text: "Meu texto" },
+    { title: "Meu título", text: "Meu texto" },
+    { title: "Meu título", text: "Meu texto" },
+    { title: "Meu título", text: "Meu texto" },
+  ];
+
   return (
-    <div>
-      <h1>Meu primeiro React App</h1>
-      <p>
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Hic minus
-        aliquid unde aperiam corporis sunt, dolorum laudantium voluptate iste
-        quibusdam explicabo nesciunt officiis? Voluptas incidunt quasi ratione
-        quos! Explicabo, cupiditate!
-      </p>
-    </div>
+    // React Fragment
+    <>
+      {texts.map((text, index) => {
+        return (
+          <MyText key={index} title={`${text.title} ${index + 1}`}>
+            {text.text}
+          </MyText>
+        );
+      })}
+    </>
   );
 }
-
- 
