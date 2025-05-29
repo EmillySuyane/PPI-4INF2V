@@ -1,0 +1,14 @@
+.container {
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 3rem;
+
+    /* EIXO HORIZONTAL */
+    justify-content: center;
+
+    /* EIXO VERTICAL */
+    align-items: center;
+    align-content: center;
+}

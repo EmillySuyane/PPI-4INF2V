@@ -1,6 +1,5 @@
-import "./styles/theme.css";
-import "./styles/global.css";
-import { MyText } from "./components/MyText";
+import styles from ".MyTextList.module.css";
+import { MyText } from "./MyText";
 
 export default function App() {
   const texts = [
