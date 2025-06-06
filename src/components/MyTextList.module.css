@@ -13,3 +13,17 @@
     align-items: center; /* flex-start flex-end center baseline stretch */
     align-content: center; /* flex-start flex-end center space-between space-around stretch */
 }
+
+.title {
+    font-weight: bolder;
+    font-size: 4rem;
+    color: var(--primary-dark);
+    text-align: center;
+
+    @media (max-width: 768px){
+        font-size: 4rem;
+    } 
+}
+
+@media (min-width: 768px) and (max-width: 120px){
+}
