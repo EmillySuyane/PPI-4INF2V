@@ -1,13 +1,13 @@
 import "./styles/theme.css";
 import "./styles/global.css";
-import { LuckyNumber } from "./components/LuckyNumber";
+import { ProductList } from "./components/ProductList";
 
 export default function App() {
 
   return (
     // React Fragment
     <>
-      <LuckyNumber />
+      <ProductList />
     </>
   );
 }
