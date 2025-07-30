@@ -1,15 +1,22 @@
 .header {
-  background-color: rgba(134, 79, 197, 0.692);
-  color: white;
+  background-color: rgb(165, 127, 255);
+  color: rgb(255, 255, 255);
   padding: 1rem;
   text-align: center;
   height: 5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+
 }
 
 .header a {
-  color: white;
+  color: var(--primary);
   text-decoration: none;
 }

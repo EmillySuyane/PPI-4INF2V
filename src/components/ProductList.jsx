@@ -1,49 +1,56 @@
-import { useEffect, useState } from "react";
 import styles from "./ProductList.module.css";
 import { CircularProgress } from "@mui/material";
 import { Product } from "./Product";
+import { useContext, useRef, useState } from "react";
+import { CartContext } from "../service/CartContext";
 
-export function ProductList({ addToCart }) {
-  var category = "beauty";
-  var limit = 12;
-  var apiUrl = `https://dummyjson.com/products/category/${category}?limit=${limit}&select=id,thumbnail,title,price,description`;
+export function ProductList() {
+  const { products, loading, error } = useContext(CartContext);
+  const [filtered, setFiltered] = useState([]);
+  const searchInput = useRef(null);
 
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  function handleSearch() {
+    const searchTerm = searchInput.current.value.toLowerCase();
+    const filteredResults = products.filter((product) =>
+      product.title.toLowerCase().includes(searchTerm)
+    );
+    setFiltered(filteredResults);
+  }
 
-  useEffect(() => {
-    async function fetchProducts() {
-      try {
-        const response = await fetch(apiUrl);
-        const data = await response.json();
-        setProducts(data.products);
-      } catch (error) {
-        setError(error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    setTimeout(() => {
-      fetchProducts();
-    }, 100);
-  }, []);
+  function handleClear() {
+    searchInput.current.value = "";
+    setFiltered([]);
+  }
+
+  const displayProducts = filtered.length > 0 ? filtered : products;
+
   return (
     <div className={styles.container}>
+      <div className={styles.searchBar}>
+        <input
+          className={styles.searchInput}
+          type="text"
+          placeholder="Search products..."
+          ref={searchInput}
+          onChange={handleSearch}
+        />
+        <button className={styles.clearButton} onClick={handleClear}>
+          CLEAR
+        </button>
+      </div>
+
       <div className={styles.grid}>
-        {products.map((product) => (
-          <Product key={product.id} product={product} addToCart={addToCart} />
+        {displayProducts.map((product) => (
+          <Product key={product.id} product={product} />
         ))}
       </div>
+
       {loading && (
         <div>
           <CircularProgress
-            // size="sm"
             thickness={5}
             style={{ margin: "2rem auto", display: "block" }}
-            sx={{
-              color: "#001111",
-            }}
+            sx={{ color: "#001111" }}
           />
           <p>Loading products...</p>
         </div>
