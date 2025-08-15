@@ -1,13 +1,13 @@
 import styles from "./Product.module.css";
 import { useContext } from "react";
 import { CartContext } from "../service/CartContext";
+import { Link } from "react-router";
 
 export function Product({ product }) {
-
   const { addToCart } = useContext(CartContext);
 
   return (
-    <div className={styles.productCard}>
+    <div key={product.id} className={styles.productCard}>
       <img
         src={product.thumbnail}
         alt={product.title}
@@ -15,17 +15,17 @@ export function Product({ product }) {
       />
       <h2 className={styles.productTitle}>{product.title}</h2>
       <p className={styles.productDescription}>{product.description}</p>
-      <div className={styles.productQty}>
-        <p className={styles.productPrice}>${product.price}</p>
-      </div>
+      <p className={styles.productPrice}>${product.price}</p>
+      {/* <Link to="/cart"> */}
       <button
-        className={styles.productButton}
         onClick={() => {
           addToCart(product);
         }}
+        className={styles.productButton}
       >
         ADD TO CART
       </button>
+      {/* </Link> */}
     </div>
   );
 }

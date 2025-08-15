@@ -1,22 +1,65 @@
-.header {
-  background-color: rgb(165, 127, 255);
-  color: rgb(255, 255, 255);
-  padding: 1rem;
-  text-align: center;
-  height: 5rem;
+.header1 {
+  grid-area: header1;
+  background-color: var(--primary-dark);
   display: flex;
   justify-content: space-between;
   align-items: center;
-
+  flex-direction: row;
+  padding: 1rem 2rem;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   z-index: 1000;
-
+  box-shadow: 0 2px 10px rgba(0,0,0,0.25);
 }
 
-.header a {
-  color: var(--primary);
+.title {
+  display: flex;
+  font-weight: bolder;
+  font-size: 3rem;
+  color: var(--primary-light);
+  text-align: center;
   text-decoration: none;
+}
+
+.header1 svg {
+  width: 2.5rem;
+  height: 2.5rem;
+  color: var(--primary-light);
+  transition: color 0.3s;
+}
+
+.header1 svg:hover {
+  color: var(--primary);
+}
+
+.cart {
+  flex-direction: row;  
+  display: flex;
+  align-items: center;
+  font-weight: bolder;
+  font-size: 1.2rem;
+  color: var(--primary-light);
+  padding: 0.5rem;
+}
+
+.cart button, .cart a, .cart svg {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--primary-light);
+  font-size: 1.5rem;
+  margin-right: 1rem;
+}
+
+.cart p {
+  display: inline-block;
+  background-color: var(--primary-dark);
+  border: 1px solid var(--primary-light);
+  margin: 0.5rem;
+  padding: 5px 10px;
+  border-radius: 1rem;
+  color: var(--primary-light);
+  font-size: 1rem;
 }
