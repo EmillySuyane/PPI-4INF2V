@@ -14,7 +14,7 @@ export default function App() {
     <CartProvider>
       <Header />
       <Routes>
-        <Route path="/productList" element={<ProductList />} />
+        <Route path="/" element={<ProductList />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />

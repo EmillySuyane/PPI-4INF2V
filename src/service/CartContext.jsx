@@ -3,17 +3,15 @@ import { useState, useEffect, createContext } from "react";
 export const CartContext = createContext();
 
 export function CartProvider({ children }) {
-  // Configurações da API
+  
   const category = "beauty"; 
   const limit = 10;
   const apiUrl = `https://dummyjson.com/products/category/${category}?limit=${limit}&select=id,thumbnail,title,price,description`;
 
-  // State para produtos
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch dos produtos
   useEffect(() => {
     async function fetchProducts() {
       try {
@@ -29,10 +27,8 @@ export function CartProvider({ children }) {
     fetchProducts();
   }, []);
 
-  // State do carrinho
   const [cart, setCart] = useState([]);
 
-  // Funções do carrinho
   function addToCart(product) {
     const existingProduct = cart.find((item) => item.id === product.id);
     if (existingProduct) {
@@ -58,10 +54,9 @@ export function CartProvider({ children }) {
     setCart([]);
   }
 
-  // Contexto que será passado para toda a aplicação
   const context = {
-    products,      // lista de produtos
-    setProducts,   // 🔹 agora o ProductAdmin pode adicionar/editar/remover
+    products,  
+    setProducts,
     loading,
     error,
     cart,

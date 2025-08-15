@@ -16,7 +16,7 @@ export function Product({ product }) {
       <h2 className={styles.productTitle}>{product.title}</h2>
       <p className={styles.productDescription}>{product.description}</p>
       <p className={styles.productPrice}>${product.price}</p>
-      {/* <Link to="/cart"> */}
+      {}
       <button
         onClick={() => {
           addToCart(product);
@@ -25,7 +25,7 @@ export function Product({ product }) {
       >
         ADD TO CART
       </button>
-      {/* </Link> */}
+      {}
     </div>
   );
 }

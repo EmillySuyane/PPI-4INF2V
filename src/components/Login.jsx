@@ -14,7 +14,7 @@ export function Login() {
 
     if (email && senha) {
       alert("Login realizado com sucesso!");
-      navigate("/productList");
+      navigate("/");
     } else {
       alert("Preencha todos os campos!");
     }

@@ -4,13 +4,13 @@ import { CartContext } from "../service/CartContext";
 import { Trash } from "lucide-react";
 
 export function Cart() {
-  const { cart, updateQtyCart, removeFromCart } = useContext(CartContext);
+  const { cart, updateQtyCart, removeFromCart, clearCart } = useContext(CartContext);
 
   const subtotal = useMemo(() => {
     return cart.reduce((acc, product) => acc + product.price * product.quantity, 0);
   }, [cart]);
 
-  const discount = 222.22; 
+  const discount = (15 / 100) * subtotal;
   const totalPrice = subtotal;
   const totalWithDiscount = subtotal - discount;
 
@@ -20,7 +20,12 @@ export function Cart() {
         <div className={styles.productListContainer}>
           <div className={styles.sectionHeader}>
             <h2>PRODUTO E SERVIÇO</h2>
-            <button className={styles.removeAllButton}>REMOVER TODOS OS PRODUTOS</button>
+            <button 
+              className={styles.removeAllButton} 
+              onClick={clearCart}
+            >
+              REMOVER TODOS OS PRODUTOS
+            </button>
           </div>
           <div className={styles.cartItems}>
             {cart.length === 0 ? (
@@ -32,21 +37,30 @@ export function Cart() {
                   <div className={styles.productDetails}>
                     <p className={styles.productSeller}>Vendido e entregue por: TRJ Megastore!</p>
                     <h3 className={styles.productTitle}>{product.title}</h3>
-                    <p className={styles.productInfo}>Com desconto no PIX: R$ {product.price.toFixed(2)}</p>
-                    <p className={styles.productInstallments}>Parcelado no cartão sem juros: R$ {(product.price / 10).toFixed(2)}</p>
-                    
+                    <p className={styles.productInfo}>Com desconto no PIX: R$ {totalWithDiscount.toFixed(2)}</p>
+                    <p className={styles.productInstallments}>
+                      Parcelado no cartão sem juros: 10x de R$ {(totalPrice / 10).toFixed(2)}
+                    </p>
                   </div>
                   <div className={styles.productActions}>
                     <div className={styles.quantityControls}>
                       <span className={styles.quantityLabel}>Quant.</span>
                       <div className={styles.quantityButtons}>
-                        <button disabled={product.quantity <= 1} onClick={() => updateQtyCart(product.id, product.quantity - 1)}>-</button>
+                        <button
+                          disabled={product.quantity <= 1}
+                          onClick={() => updateQtyCart(product.id, product.quantity - 1)}
+                        >
+                          -
+                        </button>
                         <span>{product.quantity}</span>
                         <button onClick={() => updateQtyCart(product.id, product.quantity + 1)}>+</button>
                       </div>
                     </div>
                     <p className={styles.priceHighlight}>R$ {product.price.toFixed(2)}</p>
-                    <button className={styles.removeButton} onClick={() => removeFromCart(product.id)}>
+                    <button
+                      className={styles.removeButton}
+                      onClick={() => removeFromCart(product.id)}
+                    >
                       <Trash size={20} />
                     </button>
                   </div>
@@ -54,7 +68,6 @@ export function Cart() {
               ))
             )}
           </div>
-          
         </div>
 
         <div className={styles.summaryContainer}>
@@ -68,7 +81,9 @@ export function Cart() {
               <p>Total a prazo:</p>
               <p>R$ {totalPrice.toFixed(2)}</p>
             </div>
-            <p className={styles.installmentInfo}>(em até 10x de R$ {(totalPrice / 10).toFixed(2)} sem juros)</p>
+            <p className={styles.installmentInfo}>
+              (em até 10x de R$ {(totalPrice / 10).toFixed(2)} sem juros)
+            </p>
             <div className={styles.summaryDiscountBox}>
               <p>Valor à vista no PIX:</p>
               <p>R$ {totalWithDiscount.toFixed(2)}</p>
