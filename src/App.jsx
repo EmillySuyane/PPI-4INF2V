@@ -1,25 +1,27 @@
 import "./styles/theme.css";
 import "./styles/global.css";
-import { ProductList } from "./components/ProductList";
-import { Login } from "./components/Login";
-import { Register } from "./components/Register";
-import { ProductAdmin } from "./components/ProductAdmin";
 import { Header } from "./components/Header";
-import { Route, Routes } from "react-router";
+import { ProductList } from "./components/ProductList";
 import { Cart } from "./components/Cart";
-import { CartProvider } from "./service/CartContext";
+import { Route, Routes } from "react-router";
+import { CartProvider } from "./context/CartContext";
+import { ToastContainer } from "react-toastify";
+import { Login } from "./components/Login";
 
 export default function App() {
   return (
-    <CartProvider>
-      <Header />
-      <Routes>
-        <Route path="/" element={<ProductList />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/productAdmin" element={<ProductAdmin />} />
-      </Routes>
-    </CartProvider>
+    // React Fragment
+    <>
+      <ToastContainer />
+      <CartProvider>
+        <Header />
+        <Routes>
+          <Route path="/" element={<ProductList />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/signin" element={<Login value="signin" />} />
+          <Route path="/register" element={<Login value="register" />} />
+        </Routes>
+      </CartProvider>
+    </>
   );
 }

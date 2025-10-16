@@ -1,23 +1,63 @@
 import styles from "./Header.module.css";
-import { ShoppingBasket, SquareUserRound, Package } from "lucide-react";
+import { ShoppingBasket } from "lucide-react";
 import { Link } from "react-router";
 import { useContext } from "react";
-import { CartContext } from "../service/CartContext";
+import { CartContext } from "../context/CartContext";
+import { ThemeToggle } from "./ThemeToggle";
 
 export function Header() {
-  const { cart } = useContext(CartContext);
-
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const { cart, session } = useContext(CartContext);
 
   return (
-    <header className={styles.header1}>
-      <Link to="/" className={styles.title}>TRJ Megastore</Link>
-      <div className={styles.cart}>
-        <Link to="/login"><SquareUserRound /></Link>
-        <Link to="/productAdmin"><Package /></Link>
-        <Link to="/cart"><ShoppingBasket /></Link>
-        { totalItems === 0 ? <h5></h5> : <p>{totalItems}</p> }
+    <div className={styles.container}>
+      <div>
+        <Link to="/" className={styles.link}>
+          <h1>PPI Megastore</h1>
+        </Link>
+        {session && (
+          <Link to="/user" className={styles.welcomeMessage}>
+            Welcome, {session.user.user_metadata.username}
+          </Link>
+        )}
       </div>
-    </header>
+
+      <div className={styles.actions}>
+        {!session && (
+          <>
+            <Link to="/signin" className={styles.link}>
+              Sign In
+            </Link>
+            <Link to="/register" className={styles.link}>
+              Register
+            </Link>
+          </>
+        )}
+
+        <ThemeToggle />
+
+        <Link to="/cart" className={styles.link}>
+          <div className={styles.cartInfo}>
+            <div className={styles.cartIcon}>
+              <ShoppingBasket size={32} />
+              {cart.length > 0 && (
+                <span className={styles.cartCount}>
+                  {cart.reduce((total, item) => total + item.quantity, 0)}
+                </span>
+              )}
+            </div>
+
+            <p>
+              Total: ${" "}
+              {cart
+                .reduce(
+                  (total, product) => total + product.price * product.quantity,
+                  0
+                )
+                .toFixed(2)}
+            </p>
+          </div>
+        </Link>
+      </div>
+    </div>
   );
 }
