@@ -15,7 +15,7 @@ const [loading, setLoading] = useState(true);
 
 useEffect(() => {
 async function loadProducts() {
-const { data, error } = await supabase.from("product_2v").select();
+const { data, error } = await supabase.from("product").select();
 if (error) return console.error(error);
 setProducts(data || []);
 setLoading(false);
@@ -25,21 +25,21 @@ loadProducts();
 
 
 async function createProduct(newProduct) {
-const { data, error } = await supabase.from("product_2v").insert(newProduct).select();
+const { data, error } = await supabase.from("product").insert(newProduct).select();
 if (error) return console.error(error);
 setProducts((p) => [...p, ...data]);
 }
 
 
 async function updateProduct(id, patch) {
-const { data, error } = await supabase.from("product_2v").update(patch).eq("id", id).select();
+const { data, error } = await supabase.from("product").update(patch).eq("id", id).select();
 if (error) return console.error(error);
 setProducts((prev) => prev.map((x) => (x.id === id ? data[0] : x)));
 }
 
 
 async function deleteProduct(id) {
-const { error } = await supabase.from("product_2v").delete().eq("id", id);
+const { error } = await supabase.from("product").delete().eq("id", id);
 if (error) return console.error(error);
 setProducts((prev) => prev.filter((p) => p.id !== id));
 }
@@ -48,7 +48,7 @@ setProducts((prev) => prev.filter((p) => p.id !== id));
 if (!isAdmin) return <div><h2>Acesso negado</h2></div>;
 
 
-if (loading) return <div>Carregando...</div>;
+return <div>Carregando...</div>;
 
 
 return (

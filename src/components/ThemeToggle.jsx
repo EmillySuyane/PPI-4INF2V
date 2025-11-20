@@ -3,15 +3,21 @@ import { MoonIcon, SunIcon } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState(localStorage.getItem('theme'));
+  const initial = localStorage.getItem("theme") || "light";
+  const [theme, setTheme] = useState(initial);
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme);
+    if (!theme) return;
+    document.documentElement.setAttribute("data-theme", theme);
+    try {
+      localStorage.setItem("theme", theme);
+    } catch (e) {
+      // ignore
+    }
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+    setTheme((prev) => (prev === "light" ? "dark" : "light"));
   };
 
   return (
@@ -19,8 +25,9 @@ export function ThemeToggle() {
       onClick={toggleTheme}
       className={styles.toggleButton}
       aria-label="Toggle theme"
-    > Theme
-      {theme === 'light' ? <MoonIcon /> : <SunIcon />}
+      title={`Switch to ${theme === "light" ? "dark" : "light"} theme`}
+    >
+      {theme === "light" ? <SunIcon /> : <MoonIcon />}
     </button>
   );
 }

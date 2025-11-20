@@ -1,6 +1,6 @@
 import styles from "./Header.module.css";
 import { ShoppingBasket } from "lucide-react";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { CartContext } from "../context/CartContext";
 import { ThemeToggle } from "./ThemeToggle";
@@ -14,11 +14,11 @@ export function Header() {
         <Link to="/" className={styles.link}>
           <h1>PPI Megastore</h1>
         </Link>
-        {session && (
+        {session ? (
           <Link to="/user" className={styles.welcomeMessage}>
             Welcome, {session.user.user_metadata.username}
           </Link>
-        )}
+        ) : null}
       </div>
 
       <div className={styles.actions}>

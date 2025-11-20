@@ -1,40 +1,94 @@
 .container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 15rem;
-  gap: 2rem;
+  max-width: 1000px;
+  margin: 4rem auto;
   padding: 2rem;
-}
-
-.container h1 {
-  font-size: 4rem;
-  color: var(--primary);
-  margin-bottom: 1rem;
-}
-
-.userInfo{
   display: flex;
   flex-direction: column;
+  gap: 1.5rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
+}
+
+.title {
+  font-size: 2.4rem;
+  color: var(--primary);
+  margin: 0;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.form {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.form input,
+.form textarea {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+.form textarea {
+  min-width: 100%;
+  height: 80px;
+}
+
+.productAdminList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 1rem;
-  font-size: 2rem;
+}
+
+.productAdminItem {
+  border: 1px solid #e6e6e6;
+  padding: 0.75rem;
+  border-radius: 8px;
+  background: var(--surface, #fff);
+}
+
+.productAdminItem img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
 }
 
 .button {
-  margin-top: 0.5rem;
-  padding: 1.5rem 3rem;
+  padding: 0.5rem 0.75rem;
   border: none;
-  border-radius: 0.75rem;
+  border-radius: 6px;
   background-color: var(--primary);
-  color: var(--gray-900);
-  font-size: 2rem;
-  font-weight: bolder;
-  transition: all 0.2s ease;
+  color: var(--on-primary, #fff);
+  font-size: 0.95rem;
   cursor: pointer;
 }
 
-.button:hover {
-  background-color: var(--primary-dark);
-  color: var(--gray-100);
+.button.secondary {
+  background: #f3f3f3;
+  color: #111;
+}
+
+.controls {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
 }

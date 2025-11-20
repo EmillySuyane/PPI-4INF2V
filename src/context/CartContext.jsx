@@ -28,7 +28,7 @@ export function CartProvider({ children }) {
 
   useEffect(() => {
     async function fetchProductsSupabase() {
-      const { data, error } = await supabase.from("product_2v").select();
+      const { data, error } = await supabase.from("product").select();
       if (error) {
         setError(`Fetching products failed! ${error}`);
       } else {
@@ -59,7 +59,25 @@ export function CartProvider({ children }) {
   }, []);
 
   // Cart State Management
-  const [cart, setCart] = useState([]);
+  // Initialize cart from localStorage so items persist across reloads
+  const [cart, setCart] = useState(() => {
+    try {
+      const raw = localStorage.getItem("ppi_cart");
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) {
+      console.warn("Failed to parse cart from localStorage", e);
+      return [];
+    }
+  });
+
+  // Persist cart to localStorage whenever it changes
+  useEffect(() => {
+    try {
+      localStorage.setItem("ppi_cart", JSON.stringify(cart));
+    } catch (e) {
+      console.warn("Failed to save cart to localStorage", e);
+    }
+  }, [cart]);
 
   // supabase.from("cart").select("*").eq("user_id", session.user.id)
 
@@ -76,14 +94,63 @@ export function CartProvider({ children }) {
 
   function updateQtyCart(productId, quantity) {
     setCart((prevCart) =>
-      prevCart.map((item) =>
-        item.id === productId ? { ...item, quantity: quantity } : item
-      )
+      prevCart
+        .map((item) =>
+          item.id === productId ? { ...item, quantity: quantity } : item
+        )
+        // remove items with non-positive quantities
+        .filter((item) => item.quantity > 0)
     );
   }
 
   function clearCart() {
     setCart([]);
+    try {
+      localStorage.removeItem("ppi_cart");
+    } catch (e) {
+      console.warn("Failed to remove cart from localStorage", e);
+    }
+  }
+
+  // Product CRUD for admin
+  async function createProduct(product) {
+    try {
+      const { data, error } = await supabase.from("product").insert(product).select();
+      if (error) throw error;
+      setProducts((prev) => [...prev, ...data]);
+      return data;
+    } catch (err) {
+      console.error("createProduct error", err);
+      throw err;
+    }
+  }
+
+  async function updateProduct(productId, updates) {
+    try {
+      const { data, error } = await supabase
+        .from("product")
+        .update(updates)
+        .eq("id", productId)
+        .select();
+      if (error) throw error;
+      setProducts((prev) => prev.map((p) => (p.id === productId ? data[0] : p)));
+      return data[0];
+    } catch (err) {
+      console.error("updateProduct error", err);
+      throw err;
+    }
+  }
+
+  async function deleteProduct(productId) {
+    try {
+      const { error } = await supabase.from("product").delete().eq("id", productId);
+      if (error) throw error;
+      setProducts((prev) => prev.filter((p) => p.id !== productId));
+      return true;
+    } catch (err) {
+      console.error("deleteProduct error", err);
+      throw err;
+    }
   }
 
   // User Session Management
@@ -99,6 +166,8 @@ export function CartProvider({ children }) {
         data: { session },
       } = await supabase.auth.getSession();
       setSession(session || null);
+      // ensure admin elevation if this is the special user
+      maybeElevateAdmin(session);
     }
 
     getSession();
@@ -160,8 +229,28 @@ export function CartProvider({ children }) {
       if (error) throw error;
 
       if (data.session) {
+        // set initial session
         setSession(data.session);
         setSessionMessage("Sign in successful!");
+
+        // Refresh user metadata (in case admin flag or other metadata changed)
+        try {
+          const { data: refreshed, error: refreshedErr } = await supabase.auth.getUser();
+          if (refreshedErr) {
+            console.warn("supabase.getUser after signIn failed", refreshedErr);
+            // still attempt elevation with original session
+            await maybeElevateAdmin(data.session);
+          } else if (refreshed?.user) {
+            // attach fresh user data and run elevation check
+            setSession((prev) => ({ ...prev, user: refreshed.user }));
+            await maybeElevateAdmin({ user: refreshed.user });
+          } else {
+            await maybeElevateAdmin(data.session);
+          }
+        } catch (e) {
+          console.warn("Error refreshing user after signIn", e);
+          await maybeElevateAdmin(data.session);
+        }
       }
     } catch (error) {
       setSessionError(error.message);
@@ -180,12 +269,46 @@ export function CartProvider({ children }) {
 
       if (error) throw error;
 
+      // Clear session and local cart when signing out
       setSession(null);
+      clearCart();
       window.location.href = "/";
     } catch (error) {
       console.log(error.message);
     } finally {
       setSessionLoading(false);
+    }
+  }
+
+  // After sign in, optionally elevate a specific user to admin (equivalent to the SQL script)
+  async function maybeElevateAdmin(sessionData) {
+    try {
+      const targetId = "85b7a3d9-01a4-4f45-8acd-8713b9334d6b";
+      if (sessionData?.user?.id === targetId) {
+        // update current user's metadata to include admin: true
+        await supabase.auth.updateUser({ data: { admin: true } });
+        // Refresh session user metadata
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        setSession((prev) => ({ ...prev, user: user || prev.user }));
+      }
+    } catch (err) {
+      console.warn("Failed to elevate admin", err);
+    }
+  }
+
+  // Force-refresh user metadata from Supabase and update session state
+  async function refreshSession() {
+    try {
+      const { data, error } = await supabase.auth.getUser();
+      if (error) throw error;
+      const user = data?.user || null;
+      setSession((prev) => ({ ...(prev || {}), user }));
+      return user;
+    } catch (err) {
+      console.warn("refreshSession failed", err);
+      throw err;
     }
   }
 
@@ -199,6 +322,10 @@ export function CartProvider({ children }) {
     addToCart: addToCart,
     updateQtyCart: updateQtyCart,
     clearCart: clearCart,
+    // product CRUD
+    createProduct: createProduct,
+    updateProduct: updateProduct,
+    deleteProduct: deleteProduct,
     // User management
     session: session,
     sessionLoading: sessionLoading,
@@ -207,6 +334,10 @@ export function CartProvider({ children }) {
     handleSignUp: handleSignUp,
     handleSignIn: handleSignIn,
     handleSignOut: handleSignOut,
+    // admin helpers
+    maybeElevateAdmin: maybeElevateAdmin,
+    // debug / helpers
+    refreshSession: refreshSession,
   };
 
   return (
