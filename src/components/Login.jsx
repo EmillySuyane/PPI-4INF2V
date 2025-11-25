@@ -136,6 +136,9 @@ export function Login({ value }) {
   return (
     <div className={styles.container}>
       <h1>{mode === "signin" ? "Sign In" : "Register"}</h1>
+      {/* show server errors/messages inline for quicker debugging */}
+      {sessionMessage && <div className={styles.serverMessage}>{sessionMessage}</div>}
+      {sessionError && <div className={styles.serverError}>{sessionError}</div>}
       <Form
         className={styles.form}
         errors={errors}

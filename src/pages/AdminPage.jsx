@@ -48,7 +48,7 @@ setProducts((prev) => prev.filter((p) => p.id !== id));
 if (!isAdmin) return <div><h2>Acesso negado</h2></div>;
 
 
-return <div>Carregando...</div>;
+return <div>Carregando...</div>;0
 
 
 return (

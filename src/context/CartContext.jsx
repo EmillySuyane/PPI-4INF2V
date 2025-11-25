@@ -200,6 +200,8 @@ export function CartProvider({ children }) {
         },
       });
 
+      console.log("signUp response:", { data, error });
+
       if (error) throw error;
 
       if (data?.user) {
@@ -208,8 +210,11 @@ export function CartProvider({ children }) {
         );
         window.location.href = "/signin";
       }
+      return { data, error };
     } catch (error) {
       setSessionError(error.message);
+      console.error("handleSignUp error", error);
+      return { error };
     } finally {
       setSessionLoading(false);
     }
@@ -225,6 +230,8 @@ export function CartProvider({ children }) {
         email,
         password,
       });
+
+      console.log("signIn response:", { data, error });
 
       if (error) throw error;
 
@@ -252,8 +259,11 @@ export function CartProvider({ children }) {
           await maybeElevateAdmin(data.session);
         }
       }
+      return { data, error };
     } catch (error) {
       setSessionError(error.message);
+      console.error("handleSignIn error", error);
+      return { error };
     } finally {
       setSessionLoading(false);
     }

@@ -7,6 +7,24 @@
   padding: 2rem;
 }
 
+.serverMessage {
+  margin: 1rem 0;
+  padding: 0.6rem 1rem;
+  background: #e6ffed;
+  color: #064e3b;
+  border: 1px solid #bbf7d0;
+  border-radius: 6px;
+}
+
+.serverError {
+  margin: 1rem 0;
+  padding: 0.6rem 1rem;
+  background: #fff1f2;
+  color: #7f1d1d;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+}
+
 .container h1 {
   font-size: 4rem;
   color: var(--primary);
